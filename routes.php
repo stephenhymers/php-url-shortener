@@ -13,7 +13,7 @@ Router::get('/shorten/(:any)', function($slug) {
         $url = new Url();
         $url->fill([
             'long_url' => $slug,
-            'short_url' => bin2hex(openssl_random_pseudo_bytes(8)),
+            'short_url' =>  bin2hex(openssl_random_pseudo_bytes(8)),
             'created_at' => Carbon::now()
         ]);
         $url->save();
@@ -25,8 +25,6 @@ Router::get('/shorten/(:any)', function($slug) {
         echo 'We have already processed this URL here is the shortened link: <a href="/'. $dbUrl->short_url .'">'. $dbUrl->short_url .'</a>';
     }
 });
-
-
 
 Router::get('/(:any)', function($slug) {
 

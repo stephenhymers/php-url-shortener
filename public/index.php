@@ -9,6 +9,5 @@ require '../config/database.php';
 
 require_once '../routes.php';
 
-
 // Start the routing
 Router::dispatch();
