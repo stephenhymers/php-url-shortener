@@ -1,7 +1,10 @@
 <?php
 
+namespace models;
 
-class Url extends Illuminate\Database\Eloquent\Model
+use Illuminate\Database\Eloquent\Model as Eloquent;
+
+class Url extends Eloquent
 {
     /**
      * @var string
@@ -15,12 +18,5 @@ class Url extends Illuminate\Database\Eloquent\Model
     protected $fillable = ['long_url', 'short_url'];
 
 
-    public function matchUrl($url)
-    {
-        return $this->get();
-
-        $compareUrl = $this::where('long_url', $slug)->first();
-
-    }
-
 }
+

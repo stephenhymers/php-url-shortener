@@ -1,43 +1,52 @@
 <?php
 
 use Carbon\Carbon;
+use models\Url;
 use NoahBuscher\Macaw\Macaw as Router;
 
-//Router::get('/shorten/(:any)', function($slug) {
-//    if (strlen($slug) <= 8) {
-//        throw new Exception('The URL must be longer than 8 characters to be shortened');
-//    }
-//
-//    $url = new Url();
-//
-//    if ($compareUrl === null) {
-//        $url->fill([
-//            'long_url' => $slug,
-//            'short_url' => bin2hex(openssl_random_pseudo_bytes(8)),
-//            'created_at' => Carbon::now()
-//        ]);
-//        $url->save();
-//        echo '<a href="'. $url->short_url .'">';
-//    }
-//    else {
-//        echo 'That URL has already been converted, here is the link <a href="/'. $compareUrl->short_url .'">'. $compareUrl->short_url .'</a>';
-//    }
-//});
+
+Router::get('/shorten/(:any)', function($slug) {
+
+    $dbUrl = Url::where('long_url', $slug)->first();
+
+    if ($dbUrl === null) {
+        $url = new Url();
+        $url->fill([
+            'long_url' => $slug,
+            'short_url' => bin2hex(openssl_random_pseudo_bytes(8)),
+            'created_at' => Carbon::now()
+        ]);
+        $url->save();
+
+        echo 'Your shortened link is: <a href="/'. $url->short_url .'">'. $url->short_url .'</a>';
+    }
+    else {
+
+        echo 'We have already processed this URL here is the shortened link: <a href="/'. $dbUrl->short_url .'">'. $dbUrl->short_url .'</a>';
+    }
+});
 
 
 
 Router::get('/(:any)', function($slug) {
 
-    $short = new ShortenUrl($slug);
+    // See if the url is already in the DB
+    $url = Url::where('short_url', $slug)->orWhere('long_url', $slug)->first();
 
-    dd($short);
+    if ($url === null ) {
+        echo 'This URL has not been processed yet, please click <a href="/shorten/'. $slug .'">here</a> thing link to shorten it:';
+    }
+    else {
+        // If the URL has been converted
+        if ($url->short_url === $slug) {
+            // Redirect to long url
+            header('Location:' . $url->long_url);
+        }
+        elseif ($url->long_url) {
 
-//    // See if the url is already in the DB
-//    $compareUrl = Url::where('short_url', $slug)->first();
-//
-//    if ($compareUrl !== null) {
-//        header('Location: '. $compareUrl->long_url);
-//        exit();
-//    }
+            // Show you have been redirected message
+            echo 'You have been redirected to this url from this short URL:  ' . $url->short_url;
+        }
+    }
 
 });
