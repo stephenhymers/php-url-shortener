@@ -1,0 +1,21 @@
+{
+    "name": "stephen/php-url-shortener",
+    "authors": [
+        {
+            "name": "stephen",
+            "email": "stephen@sohweb.co.uk"
+        }
+    ],
+    "require": {
+        "laravel/homestead": "^4.0.5",
+        "illuminate/database": "4.1.*",
+        "noahbuscher/macaw": "dev-master"
+    },
+    "autoload": {
+        "classmap": [
+          "models"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

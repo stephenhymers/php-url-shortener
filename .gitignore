@@ -1,0 +1,6 @@
+/vendor/
+/after.sh
+/aliases
+/Homestead.yaml
+/Vagrantfile
+/.vagrant/
