@@ -3,6 +3,34 @@
 use Carbon\Carbon;
 use models\Url;
 use NoahBuscher\Macaw\Macaw as Router;
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+Router::get('/create-table', function() {
+
+    $capsule = Capsule::schema();
+
+    /**
+     * Create Table
+     */
+    if (!$capsule->hasTable('urls')) {
+        $capsule->create('urls', function ($table) {
+
+            $table->increments('id');
+            $table->string('long_url');
+            $table->string('short_url');
+            $table->nullableTimestamps();
+
+        });
+    }
+    else {
+        echo 'The table is already created, click <a href="/shorten">here</a> to shorten a URL..';
+    }
+
+});
+
+Router::get('/shorten', function() {
+    echo 'Please enter your url in the address bar. e.g <a href="/shorten/test-123-abc">/shorten/test-123-abc</a>';
+});
 
 
 Router::get('/shorten/(:any)', function($slug) {
@@ -43,7 +71,8 @@ Router::get('/(:any)', function($slug) {
         elseif ($url->long_url) {
 
             // Show you have been redirected message
-            echo 'You have been redirected to this url from this short URL:  ' . $url->short_url;
+            echo 'You have been redirected to this url from this short URL:  ' . $url->short_url . '<br><br>
+                    Click <a href="/shorten">here</a> to shorten another.';
         }
     }
 
